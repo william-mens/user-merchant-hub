@@ -12,12 +12,21 @@ import (
 )
 
 func main() {
+
+	if os.Getenv("ENV") == "development" {
+		err := godotenv.Load(".env")
+		if err != nil {
+			log.Fatal("Error loading .env file", err)
+		}
+	}
+
 	app := fiber.New()
 
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("Error loading .env file", err)
-	}
+	// err := godotenv.Load(".env")
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file", err)
+	// }
+
 	fmt.Println(os.Getenv("DB_HOST"))
 	database.Connect()
 
