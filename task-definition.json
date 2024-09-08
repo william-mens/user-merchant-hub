@@ -5,6 +5,7 @@
             "name": "tfcatalogue",
             "image": "752532532518.dkr.ecr.eu-west-2.amazonaws.com/demo/tfcatalogue:latest",
             "cpu": 256,
+            "memory": 1024,
             "portMappings": [
                 {
                     "name": "tfcatalogue-80-tcp",
