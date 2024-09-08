@@ -15,7 +15,15 @@
                 }
             ],
             "essential": true,
-            "environment": [],
+            "environment": [
+                { "name": "DB_NAME", "value": "" },
+                { "name": "DB_HOST", "value": "" },
+                { "name": "DB_USERNAME", "value": "" },
+                { "name": "DB_PASSWORD", "value": "" },
+                { "name": "DB_PORT", "value": "" },
+                { "name": "TURSO_DATABASE_URL", "value": "" },
+                { "name": "TURSO_AUTH_TOKEN", "value": "" }
+            ],
             "environmentFiles": [],
             "mountPoints": [],
             "volumesFrom": [],
