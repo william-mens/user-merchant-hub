@@ -24,7 +24,7 @@ WORKDIR /app
 COPY --from=builder /app/main .
 
 # Copy the .env file from the build context into the runtime container
-COPY .env .env
+#COPY .env .env
 
 # Expose port (if needed by your application)
 EXPOSE 8080
