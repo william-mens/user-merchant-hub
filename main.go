@@ -13,18 +13,23 @@ import (
 
 func main() {
 
-	if os.Getenv("ENV") == "development" {
-		err := godotenv.Load(".env")
+	app := fiber.New()
+
+	err := godotenv.Load()
+	environment := os.Getenv("ENV")
+	if environment == "development" {
 		if err != nil {
 			log.Fatal("Error loading .env file", err)
 		}
 	}
 
-	app := fiber.New()
+	// fmt.Println(os.Getenv("ENV"))
 
-	// err := godotenv.Load(".env")
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file", err)
+	// if os.Getenv("ENV") == "development" {
+	// 	err := godotenv.Load(".env")
+	// 	if err != nil {
+	// 		log.Fatal("Error loading .env file", err)
+	// 	}
 	// }
 
 	fmt.Println(os.Getenv("DB_HOST"))
