@@ -11,11 +11,11 @@ RUN go mod download
 # Copy the rest of the application source code
 COPY . .
 
-# Build the Go app as a statically linked binary
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/main ./main.go
+# Build the Go app as a statically linked binary for ARM64
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o /app/main ./main.go
 
 # Step 2: Create a lightweight image to run the binary
-FROM alpine:latest
+FROM arm64v8/alpine:latest
 
 # Set working directory
 WORKDIR /app
