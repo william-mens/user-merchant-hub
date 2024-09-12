@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 
+	"bliss.com/tfcatalogue/api/services"
 	"bliss.com/tfcatalogue/internal/helpers"
 	"github.com/go-webauthn/webauthn/protocol"
 	"github.com/go-webauthn/webauthn/webauthn"
@@ -15,6 +16,10 @@ type registerReponse struct {
 }
 
 func BeginRegistration(c *fiber.Ctx) error {
+	createUser := new(helpers.SetupUsers)
+	if err := c.BodyParser(createUser); err != nil {
+		return helpers.BadRequestResponse(c, []string{"Invalid request payload"})
+	}
 
 	wconfig := &webauthn.Config{
 		RPDisplayName: "Go Webauthn",                               // Display Name for your site
@@ -28,7 +33,14 @@ func BeginRegistration(c *fiber.Ctx) error {
 		return helpers.InternalServerErrorResponse(c, err.Error())
 	}
 
-	authAuth, authError := helpers.UserCredentials()
+	user, dbErr := services.Save(createUser)
+
+	if dbErr != nil {
+		fmt.Println("an error occurred saving record in db", dbErr)
+		return helpers.InternalServerErrorResponse(c, err.Error())
+	}
+
+	authAuth, authError := helpers.UserCredentials(user)
 	if authError != nil {
 		fmt.Println("error with auth Error occurred", authError)
 		return helpers.InternalServerErrorResponse(c, err.Error())
@@ -47,3 +59,7 @@ func BeginRegistration(c *fiber.Ctx) error {
 	return helpers.SuccessResponse(c, "Success", response)
 
 }
+
+// func FinishRegistration(c *fiber.Ctx) error {
+
+// }

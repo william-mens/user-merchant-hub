@@ -3,3 +3,4 @@ server
 main
 demo.yml
 local.db
+example_key.json

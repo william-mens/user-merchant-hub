@@ -3,6 +3,7 @@ package helpers
 import (
 	"fmt"
 
+	"bliss.com/tfcatalogue/entities"
 	"github.com/go-webauthn/webauthn/webauthn"
 	"github.com/google/uuid"
 )
@@ -15,15 +16,13 @@ type Users struct {
 }
 
 func (u Users) WebAuthnID() []byte {
-	userId := uuid.New()
-
-	byteId, err := userId.MarshalBinary()
+	//converting a string to byeArray
+	authId, err := uuid.New().MarshalBinary()
 	if err != nil {
-		fmt.Println("an error occurred converting uuid to byte array", err)
+		fmt.Println("an error occurred coverting uuid to byte", err)
+		return []byte{}
 	}
-	fmt.Printf("UUID as []byte: %v\n", byteId)
-	return byteId
-
+	return authId
 }
 
 func (u Users) WebAuthnName() string {
@@ -39,17 +38,16 @@ func (u Users) WebAuthnCredentials() []webauthn.Credential {
 	return u.Credentials
 }
 
-func UserCredentials() (*Users, error) {
+func UserCredentials(request *entities.User) (webauthn.User, error) {
 	users := Users{
-		FirstName:   "Willy",
-		LastName:    "Bliss",
-		Email:       "willybliss@gmail.com",
+		FirstName:   request.FirstName,
+		LastName:    request.LastName,
+		Email:       request.Email,
 		Credentials: []webauthn.Credential{},
 	}
 
 	webAuthId := users.WebAuthnID()
 	fmt.Printf("WebAuthnID: %v\n", webAuthId)
-
 	// Example: Get WebAuthnName
 	fmt.Printf("WebAuthnName: %s\n", users.WebAuthnName())
 	fmt.Printf("WebAuthnDisplayName: %s\n", users.WebAuthnDisplayName())
