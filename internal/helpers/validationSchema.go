@@ -31,4 +31,10 @@ type (
 		MerchantId        string `json:"merchantId" validate:"omitempty,min=3,max=36"`
 		MerchantProductId string `json:"merchantProductId" validate:"omitempty,min=3,max=36"`
 	}
+
+	SetupUsers struct {
+		FirstName string `json:"firstName" validate:"omitempty,min=3,max=36"`
+		LastName  string `json:"lastName" validate:"omitempty,min=3,max=36"`
+		Email     string `json:"email" validate:"omitempty,min=3,max=36"`
+	}
 )

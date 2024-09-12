@@ -27,7 +27,7 @@ func Connect() error {
 	log.Printf("Connecting to database URL at %s", dbUrl)
 
 	Database, err = gorm.Open(sqlite.New(sqlite.Config{
-		DSN:        dbUrl,
+		DSN:        "file:local.db",
 		DriverName: "libsql",
 	}), &gorm.Config{})
 
