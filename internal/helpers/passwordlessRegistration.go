@@ -3,12 +3,12 @@ package helpers
 import (
 	"fmt"
 
-	"bliss.com/tfcatalogue/entities"
 	"github.com/go-webauthn/webauthn/webauthn"
 	"github.com/google/uuid"
 )
 
 type Users struct {
+	Id          string
 	FirstName   string
 	LastName    string
 	Email       string
@@ -17,6 +17,11 @@ type Users struct {
 
 func (u Users) WebAuthnID() []byte {
 	//converting a string to byeArray
+	var authId []byte
+	if len(u.Id) > 0 {
+		//convert the string to byte array
+		authId = []byte(u.Id)
+	}
 	authId, err := uuid.New().MarshalBinary()
 	if err != nil {
 		fmt.Println("an error occurred coverting uuid to byte", err)
@@ -38,8 +43,9 @@ func (u Users) WebAuthnCredentials() []webauthn.Credential {
 	return u.Credentials
 }
 
-func UserCredentials(request *entities.User) (webauthn.User, error) {
+func UserCredentials(request *SetupUsers) (webauthn.User, error) {
 	users := Users{
+		Id:          request.Id,
 		FirstName:   request.FirstName,
 		LastName:    request.LastName,
 		Email:       request.Email,

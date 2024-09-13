@@ -33,8 +33,10 @@ type (
 	}
 
 	SetupUsers struct {
+		Id        string `json:"id" validate:"omitempty,max=36"`
 		FirstName string `json:"firstName" validate:"omitempty,min=3,max=36"`
 		LastName  string `json:"lastName" validate:"omitempty,min=3,max=36"`
 		Email     string `json:"email" validate:"omitempty,min=3,max=36"`
+		Session   string `json:"session" validate:"omitempty,max=36"`
 	}
 )

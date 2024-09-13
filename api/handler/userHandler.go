@@ -1,9 +1,12 @@
 package handler
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 
 	"bliss.com/tfcatalogue/api/services"
+	"bliss.com/tfcatalogue/entities"
 	"bliss.com/tfcatalogue/internal/helpers"
 	"github.com/go-webauthn/webauthn/protocol"
 	"github.com/go-webauthn/webauthn/webauthn"
@@ -13,6 +16,7 @@ import (
 type registerReponse struct {
 	Options *protocol.CredentialCreation
 	Session *webauthn.SessionData
+	User    *entities.User
 }
 
 func BeginRegistration(c *fiber.Ctx) error {
@@ -33,14 +37,7 @@ func BeginRegistration(c *fiber.Ctx) error {
 		return helpers.InternalServerErrorResponse(c, err.Error())
 	}
 
-	user, dbErr := services.Save(createUser)
-
-	if dbErr != nil {
-		fmt.Println("an error occurred saving record in db", dbErr)
-		return helpers.InternalServerErrorResponse(c, err.Error())
-	}
-
-	authAuth, authError := helpers.UserCredentials(user)
+	authAuth, authError := helpers.UserCredentials(createUser)
 	if authError != nil {
 		fmt.Println("error with auth Error occurred", authError)
 		return helpers.InternalServerErrorResponse(c, err.Error())
@@ -51,15 +48,28 @@ func BeginRegistration(c *fiber.Ctx) error {
 		fmt.Println("begin registration error occurred", err)
 		return helpers.InternalServerErrorResponse(c, err.Error())
 	}
+	userId := base64.StdEncoding.EncodeToString(session.UserID)
+
+	createUser.Id = userId
+
+	sessionJson, err := json.Marshal(session)
+	if err != nil {
+		fmt.Println("failed to convert data to json", err)
+	}
+	createUser.Session = string(sessionJson)
+
+	user, dbErr := services.Save(createUser)
+
+	if dbErr != nil {
+		fmt.Println("an error occurred saving record in db", dbErr)
+		return helpers.InternalServerErrorResponse(c, err.Error())
+	}
 
 	response := registerReponse{
 		options,
 		session,
+		user,
 	}
 	return helpers.SuccessResponse(c, "Success", response)
 
 }
-
-// func FinishRegistration(c *fiber.Ctx) error {
-
-// }
